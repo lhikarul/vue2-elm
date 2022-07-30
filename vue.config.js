@@ -1,13 +1,16 @@
 const path = require("path");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const webpack = require("webpack");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const AddAssetHtmlWebpackPlugin = require("add-asset-html-webpack-plugin");
 
 const smp = new SpeedMeasurePlugin({
-  disabled: !(process.env.MEASURE === "true"),
+  disable: !(process.env.MEASURE === "true"),
 });
 
 module.exports = {
+  publicPath: "./",
   configureWebpack: smp.wrap({
     resolve: {
       alias: {
@@ -32,6 +35,17 @@ module.exports = {
     //     },
     //   ],
     // },
-    plugins: [new BundleAnalyzerPlugin()],
+    plugins: [
+      new BundleAnalyzerPlugin({
+        analyzerMode: process.env.MEASURE === "true" ? "server" : "disabled",
+      }),
+      new webpack.DllReferencePlugin({
+        context: __dirname,
+        manifest: path.resolve(__dirname, "./dll/vue-manifest.json"),
+      }),
+      new AddAssetHtmlWebpackPlugin({
+        filepath: path.resolve(__dirname, "./dll/vue.dll.js"),
+      }),
+    ],
   }),
 };
