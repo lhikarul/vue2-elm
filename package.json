@@ -24,6 +24,7 @@
     "@vue/compiler-sfc": "^3.2.37",
     "add-asset-html-webpack-plugin": "^5.0.2",
     "cross-env": "^7.0.3",
+    "image-webpack-loader": "^8.1.0",
     "sass": "^1.54.0",
     "sass-loader": "^13.0.2",
     "speed-measure-webpack-plugin": "^1.5.0",
