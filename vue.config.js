@@ -4,10 +4,15 @@ const webpack = require("webpack");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const AddAssetHtmlWebpackPlugin = require("add-asset-html-webpack-plugin");
-
+const glob = require("glob");
+const PurgeCssPlugin = require("purgecss-webpack-plugin");
 const smp = new SpeedMeasurePlugin({
   disable: !(process.env.MEASURE === "true"),
 });
+
+const PATHS = {
+  src: path.join(__dirname, "src"),
+};
 
 module.exports = {
   publicPath: "./",
@@ -77,6 +82,11 @@ module.exports = {
       }),
       new AddAssetHtmlWebpackPlugin({
         filepath: path.resolve(__dirname, "./dll/vue.dll.js"),
+      }),
+      new PurgeCssPlugin({
+        paths: glob.sync(`${PATHS.src}/**/*`, {
+          nodir: true,
+        }),
       }),
     ],
   }),
